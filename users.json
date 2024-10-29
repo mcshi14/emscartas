@@ -1,0 +1,13 @@
+{
+    "ems_iracing": {
+        "packs": 4,
+        "cards": [
+            "card_id_30",
+            "card_id_54"
+        ]
+    },
+    "mimajuto": {
+        "packs": 3,
+        "cards": []
+    }
+}

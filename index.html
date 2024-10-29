@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Colección de Cartas</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        
+        h1 {
+            color: #333;
+        }
+        
+        #collection {
+            margin-top: 20px;
+        }
+        
+        .card {
+            display: inline-block;
+            margin: 5px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Mi Colección de Cartas</h1>
+    <div id="auth">
+        <button onclick="loginWithTwitch()">Iniciar sesión con Twitch</button>
+    </div>
+
+    <div id="collection"></div>
+
+    <script>
+        const clientId = 'lvy1fq9h316jv21p2iirxiq7wttuel'; // Reemplaza con tu Client ID de Twitch
+        const redirectUri = 'https://your_github_username.github.io/your_repo_name/'; // Cambia a tu URL de GitHub Pages
+
+        // Función para iniciar sesión con Twitch
+        function loginWithTwitch() {
+            const authUrl = `https://id.twitch.tv/oauth2/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=token&scope=user:read:email`;
+            window.location = authUrl;
+        }
+
+        // Verificar si hay un token en la URL (después de autenticación)
+        function checkForToken() {
+            const hash = window.location.hash;
+            if (hash.includes("access_token")) {
+                const token = new URLSearchParams(hash.substring(1)).get("access_token");
+                fetchUserData(token);
+            }
+        }
+
+        // Obtener datos del usuario autenticado
+        async function fetchUserData(token) {
+            const response = await fetch('https://api.twitch.tv/helix/users', {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Client-ID': clientId
+                }
+            });
+            const data = await response.json();
+            const user = data.data[0];
+
+            // Mostrar colección del usuario autenticado
+            loadUserData(user.login);
+        }
+
+        // Cargar datos de la colección del usuario desde el archivo JSON
+        async function loadUserData(username) {
+            const response = await fetch('https://your_github_username.github.io/your_repo_name/users.json');
+            const data = await response.json();
+
+            if (data[username] && data[username].cards.length > 0) {
+                const collectionDiv = document.getElementById('collection');
+                collectionDiv.innerHTML = ''; // Limpiar colección previa
+
+                // Mostrar cada carta del usuario
+                data[username].cards.forEach(card => {
+                    const cardElement = document.createElement('div');
+                    cardElement.className = 'card';
+                    cardElement.textContent = card;
+                    collectionDiv.appendChild(cardElement);
+                });
+            } else {
+                document.getElementById('collection').innerHTML = "No tienes cartas aún o el usuario no existe.";
+            }
+        }
+
+        // Ejecutar la función de verificación de token al cargar la página
+        window.onload = checkForToken;
+    </script>
+</body>
+
+</html>
