@@ -2,6 +2,7 @@ from twitchio.ext import commands
 import json
 import random
 import requests
+import subprocess
 # Configura el bot con el token de acceso y el canal inicial
 CLIENT_ID = 'gp762nuuoqcoxypju8c569th9wz7q5'
 ACCESS_TOKEN = 'm29c4i5pv7ba3jjcfb3e35qkf4dk42'
@@ -21,9 +22,15 @@ def load_data():
         # Definir estructura inicial si el archivo no existe
         return {"active_collection": "default", "collections": {"default": [f"card_{i}" for i in range(1, 101)]}}
 
+# Guardar datos en el archivo JSON
 def save_data(data):
     with open("users.json", "w") as f:
         json.dump(data, f, indent=4)
+
+    # Cometer y hacer push de los cambios en GitHub
+    subprocess.run(["git", "add", "users.json"])
+    subprocess.run(["git", "commit", "-m", "Actualizar users.json con nuevos datos de usuarios"])
+    subprocess.run(["git", "push", "origin", "main"])  # Asegúrate de estar en la rama correcta
 
 # Comando para otorgar sobres al usuario
 @bot.command(name='sobres')
