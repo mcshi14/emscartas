@@ -16,7 +16,7 @@ const rarityProbabilities = {
 
 module.exports = async(req, res) => {
     const { twitchId } = req.query;
-
+    console.log("Received twitchId:", twitchId);
     try {
         // Verificar si el usuario tiene sobres
         const userResult = await pool.query('SELECT packs FROM users WHERE twitch_id = $1', [twitchId]);
