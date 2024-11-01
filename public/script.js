@@ -118,7 +118,12 @@ async function openPack(twitchId) {
 // Función para obtener el número de packs del usuario
 async function fetchUserPacks(twitchId) {
     try {
-        const response = await fetch(`/api/packs?twitchId=${twitchId}`);
+        const response = await fetch(`${apiBaseUrl}/user/${twitchId}/packs`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
         const data = await response.json();
 
         if (response.ok) {
