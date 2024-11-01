@@ -1,8 +1,0 @@
-{
-    "name": "emscartas",
-    "version": "1.0.0",
-    "license": "MIT",
-    "dependencies": {
-        "pg": "^8.x.x",
-    }
-}
