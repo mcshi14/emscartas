@@ -8,11 +8,11 @@ const pool = new Pool({
 });
 
 module.exports = async(req, res) => {
-    const { twitchId } = req.query; // Usar twitchId en lugar de username
+    const { twitchId } = req.query; // Obtener twitchId desde la URL como parámetro de consulta
     const { newCardId } = req.body;
 
     try {
-        // Obtener la información de la carta con el ID proporcionado
+        // Obtener la carta seleccionada por su ID
         const cardResult = await pool.query(`
             SELECT cards.id, cards.name, cards.rarity, cards.image_url, collections.name AS collection_name
             FROM cards
