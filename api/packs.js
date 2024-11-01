@@ -12,11 +12,11 @@ module.exports = async(req, res) => {
     await new Promise(resolve => bodyParser.json()(req, res, resolve)); // Usar body-parser para parsear JSON
 
     const { twitchId } = req.body; // Ahora req.body debería estar disponible
-    console.log("Received twitchId:", twitchId); // Log para depuración
+    console.log(twitchId); // Log para depuración
 
     try {
         // Consulta a la base de datos para obtener el número de packs del usuario
-        const result = await pool.query('SELECT packs FROM users WHERE twitch_id = $1', [twitchId]);
+        const result = await pool.query('SELECT packs FROM users WHERE twitch_id = $1', twitchId);
 
         if (result.rows.length === 0) {
             return res.status(404).json({ error: 'Usuario no encontrado' });

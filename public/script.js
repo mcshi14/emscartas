@@ -13,7 +13,6 @@ function checkForToken() {
     const hash = window.location.hash;
     if (hash.includes("access_token")) {
         const token = new URLSearchParams(hash.substring(1)).get("access_token");
-        console.log("Access Token:", token); // Verificar el token en la consola
         document.getElementById('auth').style.display = 'none'; // Ocultar el botón de inicio de sesión
         fetchUserData(token);
     }
