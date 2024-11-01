@@ -49,10 +49,16 @@ async def give_pack(ctx):
         
         # Aumentar el contador de sobres
         data[user]["packs"] += 1
-        save_data(data)
+        await save_data(data)
         
         await ctx.send(f"{user}, has recibido un sobre. Ahora tienes {data[user]['packs']} sobres!")
     
+
+# Función para cargar el archivo JSON de cartas de forma asíncrona
+async def load_cards():
+    async with aiofiles.open("cards.json", "r") as f:
+        cards_data = await f.read()
+    return json.loads(cards_data)["cards"]
 
 # Comando para abrir un sobre y obtener una carta
 @bot.command(name='abrirsobre')
@@ -68,17 +74,32 @@ async def open_pack(ctx):
             await ctx.send("No hay colecciones activas para obtener cartas.")
             return
         
-        # Elegir una colección activa al azar y seleccionar una carta de ella
+        # Elegir una colección activa al azar
         collection_name = random.choice(active_collections)
         collection_cards = data["collections"].get(collection_name, [])
         
         if collection_cards:
-            new_card = random.choice(collection_cards)
-            data[user]["cards"].append(new_card)  # Añadir la carta a la colección del usuario
-            data[user]["packs"] -= 1  # Reducir el número de sobres
-            save_data(data)  # Guardar los datos actualizados
+            # Cargar todas las cartas de `cards.json`
+            cards = await load_cards()
             
-            await ctx.send(f"{user}, has abierto un sobre y recibido la carta {new_card} de la colección {collection_name}!")
+            # Filtrar solo las cartas de la colección seleccionada
+            available_cards = [card for card in cards if card["id"] in collection_cards]
+            
+            # Seleccionar una carta al azar de las disponibles en la colección
+            new_card = random.choice(available_cards)
+            
+            # Añadir la carta con todos sus detalles a la colección del usuario
+            if "cards" not in data[user]:
+                data[user]["cards"] = []
+            data[user]["cards"].append(new_card)
+            data[user]["packs"] -= 1  # Reducir el número de sobres
+            await save_data(data)  # Guardar los datos actualizados
+            
+            # Crear un mensaje detallado sobre la carta obtenida
+            await ctx.send(
+                f"{user}, has abierto un sobre y recibido la carta '{new_card['name']}' de rareza {new_card['rarity']} "
+                f"con marco {new_card['frame']} de la colección '{collection_name}'!"
+            )
         else:
             await ctx.send("La colección seleccionada está vacía o no tiene cartas.")
     else:
@@ -93,7 +114,7 @@ async def set_collection(ctx, collection_name):
         # Comprobar si la colección existe
         if collection_name in data["collections"]:
             data["active_collection"] = collection_name
-            save_data(data)
+            await save_data(data)
             await ctx.send(f"La colección activa se ha cambiado a {collection_name}.")
         else:
             await ctx.send(f"La colección {collection_name} no existe.")
@@ -134,7 +155,7 @@ async def give_pack_to_all_viewers(ctx):
             data[user_name]["packs"] += 1
         
         # Guardar los datos actualizados
-        save_data(data)
+        await save_data(data)
         
         # Confirmación en el chat
         await ctx.send("Se han distribuido sobres a todos los espectadores actuales.")
@@ -167,7 +188,7 @@ async def add_collection(ctx, collection_name, *cards):
             data["collections"] = {}
         
         data["collections"][collection_name] = cards_list
-        save_data(data)
+        await save_data(data)
         
         await ctx.send(f"La colección '{collection_name}' ha sido añadida con las cartas: {', '.join(cards_list)}")
     else:
@@ -187,7 +208,7 @@ async def activate_collection(ctx, collection_name):
             # Agregar la colección a la lista de colecciones activas
             if collection_name not in data["active_collections"]:
                 data["active_collections"].append(collection_name)
-                save_data(data)
+                await save_data(data)
                 await ctx.send(f"La colección '{collection_name}' ha sido activada.")
             else:
                 await ctx.send(f"La colección '{collection_name}' ya está activa.")
@@ -205,7 +226,7 @@ async def deactivate_collection(ctx, collection_name):
         # Verificar si la lista de colecciones activas contiene la colección
         if "active_collections" in data and collection_name in data["active_collections"]:
             data["active_collections"].remove(collection_name)
-            save_data(data)
+            await save_data(data)
             await ctx.send(f"La colección '{collection_name}' ha sido desactivada.")
         else:
             await ctx.send(f"La colección '{collection_name}' no está activa o no existe.")
