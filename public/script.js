@@ -176,7 +176,7 @@ async function loadUserCollection(twitchId) {
         const allCardsData = await allCardsResponse.json();
 
         // Llamada para obtener las cartas que el usuario posee
-        const userCardsResponse = await fetch(`${apiBaseUrl}/user/${twitchId}?twitchId=${twitchId}`);
+        const userCardsResponse = await fetch(`${apiBaseUrl}/user/${twitchId}`);
         const userCardsData = await userCardsResponse.json();
 
         if (!allCardsResponse.ok || !userCardsResponse.ok) {
@@ -187,12 +187,63 @@ async function loadUserCollection(twitchId) {
         const allCards = allCardsData.cards;
         const userCardIds = new Set(userCardsData.cards.map(card => card.id)); // Convertir las cartas del usuario en un Set para fácil comparación
 
-        displayCards(allCards, userCardIds); // Mostrar las cartas
+        // Agrupar cartas por colección y contar las poseídas
+        const collections = {};
+        allCards.forEach(card => {
+            const collectionName = card.collection_name;
+            if (!collections[collectionName]) {
+                collections[collectionName] = { total: 0, owned: 0, cards: [] };
+            }
+            collections[collectionName].total++;
+            if (userCardIds.has(card.id)) {
+                collections[collectionName].owned++;
+            }
+            collections[collectionName].cards.push(card);
+        });
+
+        populateCollectionFilter(collections); // Llenar el menú desplegable con colecciones
+        displayCards(allCards, userCardIds); // Mostrar todas las cartas inicialmente
+
     } catch (error) {
         console.error('Error al cargar la colección:', error);
     }
 }
+// Función para llenar el menú desplegable con colecciones y conteo de cartas
+function populateCollectionFilter(collections) {
+    const select = document.getElementById('collection-select');
+    select.innerHTML = ''; // Limpiar las opciones anteriores
 
+    // Opción inicial para mostrar todas las cartas
+    const allOption = document.createElement('option');
+    allOption.value = 'ALL';
+    allOption.textContent = 'Todas las Colecciones';
+    select.appendChild(allOption);
+
+    // Crear una opción para cada colección
+    for (const [collectionName, data] of Object.entries(collections)) {
+        const option = document.createElement('option');
+        option.value = collectionName;
+        option.textContent = `${collectionName} (${data.owned}/${data.total})`;
+        select.appendChild(option);
+    }
+}
+// Función para mostrar cartas según la colección seleccionada en el menú desplegable
+function filterByCollection() {
+    const selectedCollection = document.getElementById('collection-select').value;
+    const allCards = document.querySelectorAll('.card');
+
+    allCards.forEach(card => {
+        if (selectedCollection === 'ALL') {
+            card.style.display = 'block'; // Mostrar todas las cartas
+        } else if (card.getAttribute('data-collection') === selectedCollection) {
+            card.style.display = 'block'; // Mostrar cartas de la colección seleccionada
+        } else {
+            card.style.display = 'none'; // Ocultar las demás
+        }
+    });
+}
+
+// Función para mostrar todas las cartas con etiquetas de colección y rareza
 function displayCards(allCards, userCardIds) {
     const container = document.getElementById('collection-container');
     container.innerHTML = ''; // Limpiar el contenedor antes de mostrar cartas
@@ -201,8 +252,9 @@ function displayCards(allCards, userCardIds) {
         const cardElement = document.createElement('div');
         const isOwned = userCardIds.has(card.id);
 
-        // Agregar clases de rareza y de propiedad
+        // Asignar clases y atributos de colección y rareza
         cardElement.className = `card ${card.rarity.toLowerCase()} ${isOwned ? 'card-owned' : 'card-not-owned'}`;
+        cardElement.setAttribute('data-collection', card.collection_name); // Etiqueta de colección
         cardElement.innerHTML = `
             <img src="${card.image_url}" alt="${card.name}">
             <h3>${card.name}</h3>
@@ -212,7 +264,6 @@ function displayCards(allCards, userCardIds) {
         container.appendChild(cardElement);
     });
 }
-
 async function loadAllCards() {
     // Obtenemos todas las cartas y la colección del usuario
     const allCardsResponse = await fetch('/api/allCards');

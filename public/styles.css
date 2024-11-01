@@ -61,3 +61,17 @@ body {
     color: #fff;
     cursor: pointer;
 }
+
+#collection-filter {
+    margin: 20px;
+    color: #fff;
+}
+
+#collection-select {
+    background-color: #333;
+    color: #fff;
+    border: none;
+    padding: 10px;
+    font-size: 16px;
+    cursor: pointer;
+}

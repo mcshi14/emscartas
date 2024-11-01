@@ -21,16 +21,15 @@
         </div>
     </div>
 
-    <!-- Filtros y contenedor de cartas -->
-    <div id="filters">
-        <button onclick="filterCards('ALL')">All</button>
-        <button onclick="filterCards('HRO')">HRO</button>
-        <button onclick="filterCards('MYTHIC')">MYTHIC</button>
-        <button onclick="filterCards('LEGENDARY')">LEGENDARY</button>
-        <button onclick="filterCards('EPIC')">EPIC</button>
-        <button onclick="filterCards('SUPERIOR')">SUPERIOR</button>
+    <!-- Menú desplegable para las colecciones -->
+    <div id="collection-filter">
+        <label for="collection-select">Seleccione una colección:</label>
+        <select id="collection-select" onchange="filterByCollection()">
+            <!-- Opciones generadas dinámicamente en script.js -->
+        </select>
     </div>
 
+    <!-- Contenedor de cartas -->
     <div id="collection-container">
         <!-- Contenido generado dinámicamente para las cartas -->
     </div>
