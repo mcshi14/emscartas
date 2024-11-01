@@ -75,44 +75,57 @@ function displayCards(allCards, userCards) {
 
 // Función para abrir un sobre y actualizar la base de datos en Vercel
 async function openPack(twitchId) {
-    const packsCountElem = document.getElementById('packs-count');
-    let packsCount = parseInt(packsCountElem.textContent);
+    // Llamada a la API para obtener el número de sobres restantes
+    const packCountResponse = await fetch(`${apiBaseUrl}/user/${twitchId}/packs`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
 
-    if (packsCount > 0) {
-        // Llamada a la API para abrir un sobre y actualizar en la base de datos
-        const response = await fetch(`${apiBaseUrl}/user/${twitchId}/open-pack`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
+    if (packCountResponse.ok) {
+        const packData = await packCountResponse.json();
+        let packsCount = packData.packs; // Número actual de sobres en la base de datos
+
+        if (packsCount > 0) {
+            // Llamada a la API para abrir un sobre y actualizar en la base de datos
+            const response = await fetch(`${apiBaseUrl}/user/${twitchId}/open-pack`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (response.ok) {
+                const result = await response.json();
+                const newCard = result.card;
+
+                packsCount -= 1;
+                document.getElementById('packs-count').textContent = packsCount; // Actualizar el elemento visualmente
+
+                // Mostrar la nueva carta en la colección
+                const collectionDiv = document.getElementById('collection');
+                const cardElement = document.createElement('div');
+                cardElement.className = `card ${newCard.rarity} card-owned`;
+                cardElement.innerHTML = `
+                    <img src="${newCard.image_url}" alt="${newCard.name}">
+                    <h3>${newCard.name}</h3>
+                    <p>Rareza: ${newCard.rarity}</p>
+                    <p>Colección: ${newCard.collection_name}</p>
+                `;
+                collectionDiv.appendChild(cardElement);
+
+                alert(`¡Has obtenido la carta ${newCard.name}!`);
+            } else {
+                const errorData = await response.json();
+                console.error('Error al abrir el sobre:', errorData.error);
             }
-        });
-
-        if (response.ok) {
-            const result = await response.json();
-            const newCard = result.card;
-
-            packsCount -= 1;
-            packsCountElem.textContent = packsCount;
-
-            // Mostrar la nueva carta en la colección
-            const collectionDiv = document.getElementById('collection');
-            const cardElement = document.createElement('div');
-            cardElement.className = `card ${newCard.rarity} card-owned`;
-            cardElement.innerHTML = `
-                <img src="${newCard.image_url}" alt="${newCard.name}">
-                <h3>${newCard.name}</h3>
-                <p>Rareza: ${newCard.rarity}</p>
-                <p>Colección: ${newCard.collection_name}</p>
-            `;
-            collectionDiv.appendChild(cardElement);
-
-            alert(`¡Has obtenido la carta ${newCard.name}!`);
         } else {
-            const errorData = await response.json();
-            console.error('Error al abrir el sobre:', errorData.error);
+            alert("No tienes sobres disponibles para abrir.");
         }
     } else {
-        alert("No tienes sobres disponibles para abrir.");
+        const errorData = await packCountResponse.json();
+        console.error('Error al obtener el número de sobres:', errorData.error);
     }
 }
 
