@@ -9,8 +9,9 @@ const pool = new Pool({
 
 // Configura las probabilidades de aparición para cada rareza (por ejemplo)
 const rarityProbabilities = {
-    common: 0.7, // 70%
-    rare: 0.2, // 20%
+    common: 0.5, // 70%
+    epic: 0.15, // 15%
+    rare: 0.25, // 20%
     legendary: 0.1 // 10%
 };
 
@@ -61,27 +62,54 @@ module.exports = async(req, res) => {
     }
 };
 
-// Función para seleccionar una carta al azar en función de la rareza y sus probabilidades
 function getRandomCardBasedOnRarity(cards) {
-    // Filtrar cartas por rareza
-    const cardsByRarity = {
-        common: cards.filter(card => card.rarity === 'common'),
-        rare: cards.filter(card => card.rarity === 'rare'),
-        legendary: cards.filter(card => card.rarity === 'legendary')
+    if (cards.length === 0) return null;
+
+    // Contar las cartas por rareza en `cards`
+    const rarityCounts = cards.reduce((acc, card) => {
+        acc[card.rarity] = (acc[card.rarity] || 0) + 1;
+        return acc;
+    }, {});
+
+    // Establecer pesos base para cada rareza
+    const baseRarityWeights = {
+        common: 70,
+        rare: 25,
+        legendary: 5
     };
 
-    // Seleccionar una rareza basada en las probabilidades
-    const random = Math.random();
-    let accumulatedProbability = 0;
+    // Ajustar las probabilidades de cada rareza según las cartas disponibles
+    const adjustedRarityWeights = {};
+    let totalWeight = 0;
 
-    for (const [rarity, probability] of Object.entries(rarityProbabilities)) {
-        accumulatedProbability += probability;
-        if (random < accumulatedProbability) {
-            // Seleccionar una carta al azar dentro de la rareza elegida
-            const cardsOfChosenRarity = cardsByRarity[rarity];
-            return cardsOfChosenRarity[Math.floor(Math.random() * cardsOfChosenRarity.length)];
+    for (const [rarity, baseWeight] of Object.entries(baseRarityWeights)) {
+        const availableCards = rarityCounts[rarity] || 0;
+
+        // Si no hay cartas de esta rareza, la probabilidad es cero
+        if (availableCards > 0) {
+            adjustedRarityWeights[rarity] = baseWeight;
+            totalWeight += baseWeight;
+        } else {
+            adjustedRarityWeights[rarity] = 0;
         }
     }
 
-    return null;
+    // Crear el array de cartas ponderado dinámicamente
+    const weightedCards = [];
+
+    cards.forEach(card => {
+        const weight = adjustedRarityWeights[card.rarity];
+        for (let i = 0; i < weight; i++) {
+            weightedCards.push(card);
+        }
+    });
+
+    // Si no hay cartas ponderadas (por seguridad), retornar null
+    if (weightedCards.length === 0) {
+        return null;
+    }
+
+    // Seleccionar una carta al azar del array ponderado
+    const randomIndex = Math.floor(Math.random() * weightedCards.length);
+    return weightedCards[randomIndex];
 }
