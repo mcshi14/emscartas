@@ -8,7 +8,7 @@ const pool = new Pool({
 });
 
 module.exports = async(req, res) => {
-    const { name, rarity, image_url, collection_id } = req.body;
+    const { name, rarity, image_url, collection_id } = req.query;
 
     try {
         const result = await pool.query(

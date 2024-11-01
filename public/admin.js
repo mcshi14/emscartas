@@ -51,17 +51,13 @@ async function createCard() {
     const cardImageUrl = document.getElementById('card-image-url').value;
     const collectionId = document.getElementById('card-collection').value;
 
-    const response = await fetch(`${apiBaseUrl}/createCard`, {
-        method: 'POST',
+    const url = `${apiBaseUrl}/createCard?name=${encodeURIComponent(cardName)}&rarity=${encodeURIComponent(cardRarity)}&image_url=${encodeURIComponent(cardImageUrl)}&collection_id=${encodeURIComponent(collectionId)}`;
+
+    const response = await fetch(url, {
+        method: 'GET', // Usar GET en lugar de POST
         headers: {
             'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            name: cardName,
-            rarity: cardRarity,
-            image_url: cardImageUrl,
-            collection_id: collectionId
-        })
+        }
     });
 
     const result = await response.json();
