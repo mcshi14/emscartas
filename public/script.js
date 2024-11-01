@@ -1,6 +1,6 @@
 const clientId = 'lvy1fq9h316jv21p2iirxiq7wttuel'; // Reemplaza con tu Client ID de Twitch
 const redirectUri = 'https://emscartas.vercel.app/'; // Cambia a tu URL de GitHub Pages
-const apiBaseUrl = 'https://emscartas.vercel.app/'; // Reemplaza con la URL de tu proyecto en Vercel
+const apiBaseUrl = 'https://emscartas.vercel.app/api'; // Reemplaza con la URL de tu proyecto en Vercel
 
 // Función para iniciar sesión con Twitch
 function loginWithTwitch() {
@@ -19,7 +19,7 @@ function checkForToken() {
     }
 }
 
-// Obtener datos del usuario autenticado
+// Obtener datos del usuario autenticado, incluyendo el ID
 async function fetchUserData(token) {
     const response = await fetch('https://api.twitch.tv/helix/users', {
         headers: {
@@ -30,17 +30,18 @@ async function fetchUserData(token) {
     const data = await response.json();
     const user = data.data[0];
 
-    // Mostrar nombre de usuario en la interfaz
+    // Guardar el twitch_id y mostrar el nombre de usuario en la interfaz
+    const twitchId = user.id; // ID único de Twitch del usuario
     document.getElementById('username-display').textContent = user.display_name;
     document.getElementById('user-info').style.display = 'block';
 
     // Cargar la colección del usuario autenticado desde la API en Vercel
-    fetchUserDataFromAPI(user.login);
+    loadUserData(twitchId);
 }
 
 // Obtener datos del usuario desde la API en Vercel
-async function fetchUserDataFromAPI(username) {
-    const response = await fetch(`${apiBaseUrl}/user/${username}`);
+async function loadUserData(twitchId) {
+    const response = await fetch(`${apiBaseUrl}/user/${twitchId}`);
     const data = await response.json();
     if (response.ok) {
         document.getElementById('packs-count').textContent = data.packs || 0;
@@ -73,27 +74,23 @@ function displayCards(allCards, userCards) {
 }
 
 // Función para abrir un sobre y actualizar la base de datos en Vercel
-async function openPack() {
+async function openPack(twitchId) {
     const packsCountElem = document.getElementById('packs-count');
     let packsCount = parseInt(packsCountElem.textContent);
 
     if (packsCount > 0) {
-        // Obtener una carta nueva al azar desde `cards.json` o desde un endpoint en Vercel
-        const cardsResponse = await fetch('/cards.json'); // Cambia esto si tienes un endpoint para las cartas
-        const allCards = await cardsResponse.json();
-        const newCard = allCards.cards[Math.floor(Math.random() * allCards.cards.length)];
-
         // Llamada a la API para abrir un sobre y actualizar en la base de datos
-        const username = document.getElementById('username-display').textContent;
-        const response = await fetch(`${apiBaseUrl}/user/${username}/open-pack`, {
+        const response = await fetch(`${apiBaseUrl}/user/${twitchId}/open-pack`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ newCard: newCard.id })
+            }
         });
 
         if (response.ok) {
+            const result = await response.json();
+            const newCard = result.card;
+
             packsCount -= 1;
             packsCountElem.textContent = packsCount;
 
@@ -105,6 +102,7 @@ async function openPack() {
                 <img src="${newCard.image_url}" alt="${newCard.name}">
                 <h3>${newCard.name}</h3>
                 <p>Rareza: ${newCard.rarity}</p>
+                <p>Colección: ${newCard.collection_name}</p>
             `;
             collectionDiv.appendChild(cardElement);
 
