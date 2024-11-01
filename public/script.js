@@ -117,12 +117,14 @@ async function openPack(twitchId) {
 
 async function fetchUserPacks(twitchId) {
     try {
-        const response = await fetch(`${apiBaseUrl}/user/${twitchId}/packs`, {
-            method: 'GET', // Cambiamos a GET en lugar de POST
+        const response = await fetch(`${apiBaseUrl}/user/packs`, {
+            method: 'POST', // Cambia a POST para enviar el cuerpo
             headers: {
                 'Content-Type': 'application/json'
-            }
+            },
+            body: JSON.stringify({ twitchId }) // Envía twitchId en el cuerpo
         });
+
         const data = await response.json();
 
         if (response.ok) {

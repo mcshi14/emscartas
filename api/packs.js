@@ -8,7 +8,7 @@ const pool = new Pool({
 });
 
 module.exports = async(req, res) => {
-    const { twitchId } = req.params; // Cambiar a req.params para capturar twitchId desde la ruta
+    const { twitchId } = req.body; // Obtener twitchId del cuerpo de la solicitud
     console.log("Received twitchId:", twitchId); // Log para depuración
 
     try {

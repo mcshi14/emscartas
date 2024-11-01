@@ -12,7 +12,7 @@
     "routes": [
         { "src": "/api/user/([^/]+)$", "dest": "/api/getUser.js" },
         { "src": "/api/user/([^/]+)/open-pack$", "dest": "/api/openPack.js" },
-        { "src": "/api/user/([^/]+)/packs$", "dest": "/api/packs.js" },
+        { "src": "/api/user/packs$", "dest": "/api/packs.js" },
         { "src": "/(.*)", "dest": "/public/$1" }
     ]
 }
