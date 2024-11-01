@@ -1,4 +1,5 @@
 const { Pool } = require('pg');
+const bodyParser = require('body-parser'); // Importa body-parser
 
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
@@ -8,7 +9,9 @@ const pool = new Pool({
 });
 
 module.exports = async(req, res) => {
-    const { twitchId } = req.body; // Obtener twitchId del cuerpo de la solicitud
+    await new Promise(resolve => bodyParser.json()(req, res, resolve)); // Usar body-parser para parsear JSON
+
+    const { twitchId } = req.body; // Ahora req.body debería estar disponible
     console.log("Received twitchId:", twitchId); // Log para depuración
 
     try {
