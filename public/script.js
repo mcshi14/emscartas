@@ -38,7 +38,7 @@ async function checkForToken() {
 
             // Llamar a la función para cargar las cartas del usuario
             await loadUserCollection(twitchId);
-
+            await fetchUserData(token)
         } catch (error) {
             console.error("Error al obtener el usuario de Twitch:", error);
         }
@@ -316,4 +316,7 @@ function filterCards(rarity) {
 }
 
 // Ejecutar la función de verificación de token al cargar la página
-window.onload = checkForToken;
+window.onload = () => {
+    checkForToken(); // Cargar las colecciones en el selector de administración
+
+};
