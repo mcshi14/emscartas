@@ -135,26 +135,38 @@ async function openPack() {
                 // Mostrar la nueva carta en la animación de revelado
                 cardReveal.style.display = 'flex';
                 cardReveal.innerHTML = `
-            <button class="close-btn" onclick="closeCardReveal()">X</button>
-            <div class="card ${newCard.rarity}">
-                <img src="${newCard.image_url}" alt="${newCard.name}">
-                <h3>${newCard.name}</h3>
-                <p>Rareza: ${newCard.rarity}</p>
-                <p>Colección: ${newCard.collection_name}</p>
-            </div>
-        `;
+                    <button class="close-btn" onclick="closeCardReveal()">X</button>
+                    <div class="card ${newCard.rarity}">
+                        <img src="${newCard.image_url}" alt="${newCard.name}">
+                        <h3>${newCard.name}</h3>
+                        <p>Rareza: ${newCard.rarity}</p>
+                        <p>Colección: ${newCard.collection_name}</p>
+                    </div>
+                `;
 
-                // Agregar la nueva carta a la colección en la página principal
+                // Agregar la carta a la colección o incrementar el contador si ya existe
                 const collectionDiv = document.getElementById('collection');
-                const cardElement = document.createElement('div');
-                cardElement.className = `card ${newCard.rarity} card-owned`;
-                cardElement.innerHTML = `
-            <img src="${newCard.image_url}" alt="${newCard.name}">
-            <h3>${newCard.name}</h3>
-            <p>Rareza: ${newCard.rarity}</p>
-            <p>Colección: ${newCard.collection_name}</p>
-        `;
-                collectionDiv.appendChild(cardElement);
+                let existingCardElement = collectionDiv.querySelector(`.card2[data-id="${newCard.id}"]`);
+
+                if (existingCardElement) {
+                    // Incrementar el contador de cartas repetidas
+                    let countElem = existingCardElement.querySelector('.count');
+                    let count = parseInt(countElem.textContent.slice(1)) + 1;
+                    countElem.textContent = `x${count}`;
+                } else {
+                    // Crear una nueva carta en la colección con contador de repetición en 1
+                    const cardElement = document.createElement('div');
+                    cardElement.className = `card ${newCard.rarity} card-owned`;
+                    cardElement.setAttribute('data-id', newCard.id);
+                    cardElement.innerHTML = `
+                        <img src="${newCard.image_url}" alt="${newCard.name}">
+                        <h3>${newCard.name}</h3>
+                        <p>Rareza: ${newCard.rarity}</p>
+                        <p>Colección: ${newCard.collection_name}</p>
+                        <span class="count">x1</span>
+                    `;
+                    collectionDiv.appendChild(cardElement);
+                }
             } else {
                 const errorData = await response.json();
                 console.error('Error al abrir el sobre:', errorData.error);
@@ -167,6 +179,7 @@ async function openPack() {
         alert("No tienes sobres disponibles para abrir.");
     }
 }
+
 
 
 // Función para cerrar la vista de la carta revelada
