@@ -57,6 +57,7 @@ async def give_pack_command(ctx):
     twitch_id = ctx.author.id  # Obtenemos el ID único de Twitch del autor
     new_pack_count = give_pack_to_user(twitch_id)
     await ctx.send(f"{ctx.author.name}, has recibido un sobre. Ahora tienes {new_pack_count} sobres.")
+#Añadir una funcion para saber si un id de twitch es mod o no
 
 # Comando para abrir un sobre y obtener una carta
 @bot.command(name='abrirsobre')

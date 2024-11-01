@@ -8,11 +8,11 @@ const pool = new Pool({
 });
 
 module.exports = async(req, res) => {
-    const { twitchId } = req.query; // Obtener twitchId de la consulta
+    const { twitchId } = req.params; // Cambiar a req.params para capturar twitchId desde la ruta
+    console.log("Received twitchId:", twitchId); // Log para depuración
 
     try {
         // Consulta a la base de datos para obtener el número de packs del usuario
-        console.log(twitchId)
         const result = await pool.query('SELECT packs FROM users WHERE twitch_id = $1', [twitchId]);
 
         if (result.rows.length === 0) {
@@ -20,11 +20,9 @@ module.exports = async(req, res) => {
         }
 
         const packs = result.rows[0].packs; // Número de packs del usuario
-
-        // Responder con el número de packs
         res.status(200).json({ packs });
     } catch (error) {
-        console.error(error);
+        console.error("Error en la consulta a la base de datos:", error);
         res.status(500).json({ error: 'Error al obtener el número de packs del usuario' });
     }
 };
