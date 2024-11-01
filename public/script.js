@@ -28,7 +28,7 @@ async function fetchUserData(token) {
     });
     const data = await response.json();
     const user = data.data[0];
-
+    twitchId = user.id;
     // Mostrar nombre de usuario en la interfaz
     document.getElementById('username-display').textContent = user.display_name;
     document.getElementById('user-info').style.display = 'block';
@@ -72,14 +72,14 @@ function displayCards(allCards, userCards) {
 }
 
 // Función para abrir un sobre y actualizar la base de datos en Vercel
-async function openPack(twitchId) {
+async function openPack() {
     const packsCountElem = document.getElementById('packs-count');
     let packsCount = parseInt(packsCountElem.textContent);
 
     if (packsCount > 0) {
         // Llamada a la API para abrir un sobre usando GET y pasar twitchId como parámetro de consulta
-        const response = await fetch(`${apiBaseUrl}/user/${twitchId}/open-pack?`, {
-            method: 'GET', // Cambiado a GET
+        const response = await fetch(`${apiBaseUrl}/user/${twitchId}/open-pack?twitchId=${twitchId}`, {
+            method: 'GET', // Usamos GET para enviar twitchId como parámetro de consulta
             headers: {
                 'Content-Type': 'application/json'
             }
