@@ -1,22 +1,26 @@
 const apiBaseUrl = 'https://emscartas.vercel.app/api'; // Cambia esto a la URL de tu backend
 
-// Función para cargar las colecciones disponibles al iniciar la página
 async function loadCollections() {
-    const response = await fetch(`${apiBaseUrl}/allCollections`);
-    const collections = await response.json();
-    const select = document.getElementById('card-collection');
+    try {
+        const response = await fetch(`${apiBaseUrl}/collections`);
+        const data = await response.json();
 
-    select.innerHTML = ''; // Limpiar las opciones anteriores
-    collections.forEach(collection => {
-        const option = document.createElement('option');
-        option.value = collection.id;
-        option.textContent = collection.name;
-        select.appendChild(option);
-    });
+        if (response.ok) {
+            const collectionSelect = document.getElementById('card-collection'); // Asegúrate de que este ID sea correcto
+
+            data.collections.forEach(collection => {
+                const option = document.createElement('option');
+                option.value = collection.id;
+                option.textContent = collection.name;
+                collectionSelect.appendChild(option);
+            });
+        } else {
+            console.error('Error al obtener las colecciones:', data.error);
+        }
+    } catch (error) {
+        console.error('Error al cargar las colecciones:', error);
+    }
 }
-
-// Llamar a la función de carga de colecciones al cargar la página
-window.onload = loadCollections;
 
 // Función para crear una nueva colección
 async function createCollection() {
@@ -68,3 +72,6 @@ async function createCard() {
         alert(`Error: ${result.error}`);
     }
 }
+window.onload = () => {
+    loadCollections(); // Cargar las colecciones en el selector de administración
+};

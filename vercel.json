@@ -17,6 +17,7 @@
         { "src": "/api/allCollections", "dest": "/api/allCollections.js" },
         { "src": "/api/createCollection", "dest": "/api/createCollection.js" },
         { "src": "/api/createCard", "dest": "/api/createCard.js" },
+        { "src": "/api/collections$", "dest": "/api/getCollections.js" },
         { "src": "/(.*)", "dest": "/public/$1" }
     ]
 }
