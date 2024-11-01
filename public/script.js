@@ -8,13 +8,37 @@ function loginWithTwitch() {
     window.location = authUrl;
 }
 
-// Verificar si hay un token en la URL (después de autenticación)
-function checkForToken() {
+async function checkForToken() {
     const hash = window.location.hash;
     if (hash.includes("access_token")) {
         const token = new URLSearchParams(hash.substring(1)).get("access_token");
+        console.log("Access Token:", token); // Verificar el token en la consola
+
         document.getElementById('auth').style.display = 'none'; // Ocultar el botón de inicio de sesión
-        fetchUserData(token);
+
+        // Llamada a Twitch para obtener el ID y el nombre de usuario
+        try {
+            const userResponse = await fetch('https://api.twitch.tv/helix/users', {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Client-ID': clientId
+                }
+            });
+            const userData = await userResponse.json();
+            const twitchId = userData.data[0].id; // Obtener twitchId
+            const displayName = userData.data[0].display_name; // Obtener nombre de usuario
+
+            // Mostrar el nombre de usuario en la interfaz
+            document.getElementById('username-display').textContent = displayName;
+            document.getElementById('user-info').style.display = 'block';
+
+            // Cargar la colección de cartas del usuario autenticado
+            await loadUserCollection(twitchId);
+        } catch (error) {
+            console.error("Error al obtener el usuario de Twitch:", error);
+        }
+    } else {
+        console.log("Usuario no autenticado");
     }
 }
 
