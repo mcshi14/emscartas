@@ -9,16 +9,17 @@
 </head>
 
 <body>
-    <h1>Mi Colección de Cartas</h1>
-    <div id="auth">
-        <button onclick="loginWithTwitch()">Iniciar sesión con Twitch</button>
+    <div id="filters">
+        <button onclick="filterCards('HRO')">HRO</button>
+        <button onclick="filterCards('MYTHIC')">MYTHIC</button>
+        <button onclick="filterCards('LEGENDARY')">LEGENDARY</button>
+        <button onclick="filterCards('EPIC')">EPIC</button>
+        <button onclick="filterCards('SUPERIOR')">SUPERIOR</button>
     </div>
-    <div id="user-info" style="display: none;">
-        <p>Bienvenido, <span id="username-display"></span>!</p>
-        <button onclick="openPack()">Abrir Sobre</button>
-        <p>Sobres restantes: <span id="packs-count">0</span></p>
+
+    <div id="collection-container">
+        <!-- Contenido generado dinámicamente para las cartas -->
     </div>
-    <div id="collection"></div>
 
     <script src="script.js"></script>
 </body>

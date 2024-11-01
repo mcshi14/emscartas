@@ -74,52 +74,22 @@ async function loadUserData(twitchId) {
 }
 
 function displayCards(allCards, userCardIds) {
-    const collectionDiv = document.getElementById('collection');
-    collectionDiv.innerHTML = ''; // Limpiar la colección antes de mostrar nuevas cartas
+    const container = document.getElementById('collection-container');
+    container.innerHTML = ''; // Limpiar el contenedor antes de mostrar cartas
 
-    // Agrupar las cartas por colección
-    const collections = {};
     allCards.forEach(card => {
-        if (!collections[card.collection_name]) {
-            collections[card.collection_name] = [];
-        }
-        collections[card.collection_name].push(card);
+        const cardElement = document.createElement('div');
+        const isOwned = userCardIds.has(card.id);
+
+        cardElement.className = `card ${isOwned ? 'card-owned' : 'card-not-owned'}`;
+        cardElement.innerHTML = `
+            <img src="${card.image_url}" alt="${card.name}">
+            <h3>${card.name}</h3>
+            <p>Rareza: ${card.rarity}</p>
+        `;
+
+        container.appendChild(cardElement);
     });
-
-    // Crear una sección para cada colección
-    for (const [collectionName, cards] of Object.entries(collections)) {
-        // Crear un contenedor de colección
-        const collectionSection = document.createElement('div');
-        collectionSection.className = 'collection-section';
-
-        // Título de la colección
-        const collectionTitle = document.createElement('h2');
-        collectionTitle.textContent = collectionName;
-        collectionSection.appendChild(collectionTitle);
-
-        // Contenedor para las cartas de la colección
-        const cardsContainer = document.createElement('div');
-        cardsContainer.className = 'cards-container';
-
-        // Añadir cada carta a la sección
-        cards.forEach(card => {
-            const cardElement = document.createElement('div');
-            const isOwned = userCardIds.has(card.id);
-
-            // Asignar clases para estilo y contenido de la carta
-            cardElement.className = `card ${card.rarity} ${isOwned ? 'card-owned' : 'card-not-owned'}`;
-            cardElement.innerHTML = `
-                <img src="${card.image_url}" alt="${card.name}">
-                <h3>${card.name}</h3>
-                <p>Rareza: ${card.rarity}</p>
-            `;
-
-            cardsContainer.appendChild(cardElement);
-        });
-
-        collectionSection.appendChild(cardsContainer);
-        collectionDiv.appendChild(collectionSection);
-    }
 }
 
 // Función para abrir un sobre y actualizar la base de datos en Vercel
@@ -232,6 +202,27 @@ function displayCards(allCards, userCardIds) {
         `;
 
         collectionDiv.appendChild(cardElement);
+    });
+}
+async function loadAllCards() {
+    // Obtenemos todas las cartas y la colección del usuario
+    const allCardsResponse = await fetch('/api/allCards');
+    const allCardsData = await allCardsResponse.json();
+    const userCardsResponse = await fetch(`/api/user/${twitchId}`);
+    const userCardsData = await userCardsResponse.json();
+
+    const userCardIds = new Set(userCardsData.cards.map(card => card.id)); // IDs de cartas del usuario
+    displayCards(allCardsData.cards, userCardIds);
+}
+
+function filterCards(rarity) {
+    const allCards = document.querySelectorAll('.card');
+    allCards.forEach(card => {
+        if (card.querySelector('p').textContent.includes(rarity) || rarity === 'ALL') {
+            card.style.display = 'block';
+        } else {
+            card.style.display = 'none';
+        }
     });
 }
 // Ejecutar la función de verificación de token al cargar la página
