@@ -1,5 +1,6 @@
 const clientId = 'lvy1fq9h316jv21p2iirxiq7wttuel'; // Reemplaza con tu Client ID de Twitch
 const redirectUri = 'https://mcshi14.github.io/emscartas/'; // Cambia a tu URL de GitHub Pages
+const apiBaseUrl = 'https://your-vercel-project-url.vercel.app/api'; // Reemplaza con la URL de tu proyecto en Vercel
 
 // Función para iniciar sesión con Twitch
 function loginWithTwitch() {
@@ -33,28 +34,26 @@ async function fetchUserData(token) {
     document.getElementById('username-display').textContent = user.display_name;
     document.getElementById('user-info').style.display = 'block';
 
-    // Cargar la colección del usuario autenticado
-    loadUserData(user.login);
+    // Cargar la colección del usuario autenticado desde la API en Vercel
+    fetchUserDataFromAPI(user.login);
 }
 
-// Cargar datos de la colección del usuario y de todas las cartas desde el archivo JSON
-async function loadUserData(username) {
-    const cardsResponse = await fetch('https://mcshi14.github.io/emscartas/cards.json');
-    const usersResponse = await fetch('https://mcshi14.github.io/emscartas/users.json');
-    const allCards = await cardsResponse.json();
-    const usersData = await usersResponse.json();
-    const userData = usersData[username];
-
-    // Verificar que userData no sea nulo o undefined
-    const userCards = userData && userData.cards ? userData.cards.map(card => card.id) : [];
-    document.getElementById('packs-count').textContent = userData && userData.packs || 0;
-
-    displayCards(allCards.cards, userCards);
+// Obtener datos del usuario desde la API en Vercel
+async function fetchUserDataFromAPI(username) {
+    const response = await fetch(`${apiBaseUrl}/user/${username}`);
+    const data = await response.json();
+    if (response.ok) {
+        document.getElementById('packs-count').textContent = data.packs || 0;
+        displayCards(data.cards, data.cards.map(card => card.id)); // Muestra las cartas con base en los datos del usuario
+    } else {
+        console.error('Error al obtener los datos del usuario:', data.error);
+    }
 }
 
 // Mostrar todas las cartas, indicando cuáles posee el usuario
 function displayCards(allCards, userCards) {
     const collectionDiv = document.getElementById('collection');
+    collectionDiv.innerHTML = ''; // Limpiar la colección antes de mostrar nuevas cartas
 
     allCards.forEach(card => {
         const cardElement = document.createElement('div');
@@ -66,40 +65,54 @@ function displayCards(allCards, userCards) {
             <img src="${card.image_url}" alt="${card.name}">
             <h3>${card.name}</h3>
             <p>Rareza: ${card.rarity}</p>
+            <p>Colección: ${card.collection_name}</p>
         `;
 
         collectionDiv.appendChild(cardElement);
     });
 }
 
-// Función para abrir un sobre
+// Función para abrir un sobre y actualizar la base de datos en Vercel
 async function openPack() {
     const packsCountElem = document.getElementById('packs-count');
     let packsCount = parseInt(packsCountElem.textContent);
 
     if (packsCount > 0) {
-        // Simulación de obtener una carta aleatoria de las colecciones activas
-        const cardsResponse = await fetch('https://mcshi14.github.io/emscartas/cards.json');
+        // Obtener una carta nueva al azar desde `cards.json` o desde un endpoint en Vercel
+        const cardsResponse = await fetch('/cards.json'); // Cambia esto si tienes un endpoint para las cartas
         const allCards = await cardsResponse.json();
         const newCard = allCards.cards[Math.floor(Math.random() * allCards.cards.length)];
 
-        // Mostrar la nueva carta en la colección
-        const collectionDiv = document.getElementById('collection');
-        const cardElement = document.createElement('div');
-        cardElement.className = `card ${newCard.rarity} card-owned`;
-        cardElement.innerHTML = `
-            <img src="${newCard.image_url}" alt="${newCard.name}">
-            <h3>${newCard.name}</h3>
-            <p>Rareza: ${newCard.rarity}</p>
-        `;
-        collectionDiv.appendChild(cardElement);
+        // Llamada a la API para abrir un sobre y actualizar en la base de datos
+        const username = document.getElementById('username-display').textContent;
+        const response = await fetch(`${apiBaseUrl}/user/${username}/open-pack`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ newCard: newCard.id })
+        });
 
-        // Actualizar el conteo de sobres y reducir en 1
-        packsCount -= 1;
-        packsCountElem.textContent = packsCount;
+        if (response.ok) {
+            packsCount -= 1;
+            packsCountElem.textContent = packsCount;
 
-        // Aquí es donde se actualizaría el archivo `users.json` en el servidor
-        alert(`¡Has obtenido la carta ${newCard.name}!`);
+            // Mostrar la nueva carta en la colección
+            const collectionDiv = document.getElementById('collection');
+            const cardElement = document.createElement('div');
+            cardElement.className = `card ${newCard.rarity} card-owned`;
+            cardElement.innerHTML = `
+                <img src="${newCard.image_url}" alt="${newCard.name}">
+                <h3>${newCard.name}</h3>
+                <p>Rareza: ${newCard.rarity}</p>
+            `;
+            collectionDiv.appendChild(cardElement);
+
+            alert(`¡Has obtenido la carta ${newCard.name}!`);
+        } else {
+            const errorData = await response.json();
+            console.error('Error al abrir el sobre:', errorData.error);
+        }
     } else {
         alert("No tienes sobres disponibles para abrir.");
     }
