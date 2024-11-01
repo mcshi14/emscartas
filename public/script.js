@@ -115,64 +115,65 @@ async function openPack() {
         pack.classList.add('open');
 
         // Esperar a que la animación de apertura finalice
-        await new Promise(resolve => setTimeout(resolve, 600));
+        setTimeout(async() => {
+            // Llamada a la API para abrir un sobre y reducir el número de sobres
+            const response = await fetch(`${apiBaseUrl}/user/${twitchId}/open-pack?twitchId=${twitchId}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
 
-        // Llamada a la API para abrir un sobre y reducir el número de sobres
-        const response = await fetch(`${apiBaseUrl}/user/${twitchId}/open-pack?twitchId=${twitchId}`, {
-            method: 'GET', // Usamos GET para enviar twitchId como parámetro de consulta
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
+            if (response.ok) {
+                const result = await response.json();
+                const newCard = result.card;
 
-        if (response.ok) {
-            const result = await response.json();
-            const newCard = result.card;
+                // Actualizar el contador de sobres
+                packsCount -= 1;
+                packsCountElem.textContent = packsCount;
 
-            // Actualizar el contador de sobres
-            packsCount -= 1;
-            packsCountElem.textContent = packsCount;
-
-            // Mostrar la nueva carta en la animación de revelado
-            cardReveal.style.display = 'flex';
-            cardReveal.innerHTML = `
-                <div class="card ${newCard.rarity} card-owned">
-                    <img src="${newCard.image_url}" alt="${newCard.name}">
-                    <h3>${newCard.name}</h3>
-                    <p>Rareza: ${newCard.rarity}</p>
-                    <p>Colección: ${newCard.collection_name}</p>
-                </div>
-            `;
-
-            // Agregar la nueva carta a la colección en la página
-            const collectionDiv = document.getElementById('collection');
-            const cardElement = document.createElement('div');
-            cardElement.className = `card ${newCard.rarity} card-owned`;
-            cardElement.innerHTML = `
+                // Mostrar la nueva carta en la animación de revelado
+                cardReveal.style.display = 'flex';
+                cardReveal.innerHTML = `
+            <button class="close-btn" onclick="closeCardReveal()">X</button>
+            <div class="card ${newCard.rarity}">
                 <img src="${newCard.image_url}" alt="${newCard.name}">
                 <h3>${newCard.name}</h3>
                 <p>Rareza: ${newCard.rarity}</p>
                 <p>Colección: ${newCard.collection_name}</p>
-            `;
-            collectionDiv.appendChild(cardElement);
+            </div>
+        `;
 
-            // Mensaje de éxito
-            alert(`¡Has obtenido la carta ${newCard.name}!`);
-        } else {
-            const errorData = await response.json();
-            console.error('Error al abrir el sobre:', errorData.error);
-        }
+                // Agregar la nueva carta a la colección en la página principal
+                const collectionDiv = document.getElementById('collection');
+                const cardElement = document.createElement('div');
+                cardElement.className = `card ${newCard.rarity} card-owned`;
+                cardElement.innerHTML = `
+            <img src="${newCard.image_url}" alt="${newCard.name}">
+            <h3>${newCard.name}</h3>
+            <p>Rareza: ${newCard.rarity}</p>
+            <p>Colección: ${newCard.collection_name}</p>
+        `;
+                collectionDiv.appendChild(cardElement);
+            } else {
+                const errorData = await response.json();
+                console.error('Error al abrir el sobre:', errorData.error);
+            }
 
-        // Reiniciar el estado de la animación
-        pack.classList.remove('open');
-        cardReveal.style.display = 'none';
+            // Reiniciar el estado de la animación
+            pack.classList.remove('open');
+        }, 600);
     } else {
         alert("No tienes sobres disponibles para abrir.");
     }
 }
 
 
-
+// Función para cerrar la vista de la carta revelada
+function closeCardReveal() {
+    const cardReveal = document.getElementById('cardReveal');
+    cardReveal.style.display = 'none';
+}
 async function fetchUserPacks(twitchId) {
     try {
         // Enviar el twitchId como parámetro de consulta en una solicitud GET
