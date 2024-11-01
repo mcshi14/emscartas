@@ -9,7 +9,21 @@
 </head>
 
 <body>
+    <!-- Contenedor de Autenticación -->
+    <div id="auth-container">
+        <button id="login-button" onclick="loginWithTwitch()">Log In</button>
+        <div id="user-info" style="display: none;">
+            <img id="user-avatar" src="" alt="Avatar" />
+            <span id="username-display"></span>
+            <div id="dropdown-menu">
+                <button onclick="logout()">Logout</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filtros y contenedor de cartas -->
     <div id="filters">
+        <button onclick="filterCards('ALL')">All</button>
         <button onclick="filterCards('HRO')">HRO</button>
         <button onclick="filterCards('MYTHIC')">MYTHIC</button>
         <button onclick="filterCards('LEGENDARY')">LEGENDARY</button>

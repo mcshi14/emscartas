@@ -8,13 +8,15 @@ function loginWithTwitch() {
     window.location = authUrl;
 }
 
+// Verificar si hay un token en la URL y cargar el usuario
 async function checkForToken() {
     const hash = window.location.hash;
     if (hash.includes("access_token")) {
         const token = new URLSearchParams(hash.substring(1)).get("access_token");
         console.log("Access Token:", token); // Verificar el token en la consola
 
-        document.getElementById('auth').style.display = 'none'; // Ocultar el botón de inicio de sesión
+        // Ocultar el botón de inicio de sesión
+        document.getElementById('login-button').style.display = 'none';
 
         // Llamada a Twitch para obtener el ID y el nombre de usuario
         try {
@@ -25,21 +27,29 @@ async function checkForToken() {
                 }
             });
             const userData = await userResponse.json();
-            const twitchId = userData.data[0].id; // Obtener twitchId
-            const displayName = userData.data[0].display_name; // Obtener nombre de usuario
+            const twitchId = userData.data[0].id;
+            const displayName = userData.data[0].display_name;
+            const profileImageUrl = userData.data[0].profile_image_url;
 
-            // Mostrar el nombre de usuario en la interfaz
-            document.getElementById('username-display').textContent = displayName;
-            document.getElementById('user-info').style.display = 'block';
+            // Mostrar el nombre de usuario y foto en la interfaz
+            document.getElementById('user-info').style.display = 'flex';
+            document.getElementById('username-display').textContent = `Bienvenido, ${displayName}`;
+            document.getElementById('user-avatar').src = profileImageUrl;
 
-            // Cargar la colección de cartas del usuario autenticado
+            // Llamar a la función para cargar las cartas del usuario
             await loadUserCollection(twitchId);
+
         } catch (error) {
             console.error("Error al obtener el usuario de Twitch:", error);
         }
     } else {
         console.log("Usuario no autenticado");
     }
+}
+
+// Función para cerrar sesión
+function logout() {
+    window.location.href = redirectUri; // Redirige al usuario al iniciar sesión
 }
 
 // Llamar a `fetchUserPacks` después de la autenticación del usuario
@@ -183,27 +193,26 @@ async function loadUserCollection(twitchId) {
     }
 }
 
-// Mostrar todas las cartas, aplicando un efecto de "apagado" a las que no posee el usuario
 function displayCards(allCards, userCardIds) {
-    const collectionDiv = document.getElementById('collection');
-    collectionDiv.innerHTML = ''; // Limpiar la colección antes de mostrar nuevas cartas
+    const container = document.getElementById('collection-container');
+    container.innerHTML = ''; // Limpiar el contenedor antes de mostrar cartas
 
     allCards.forEach(card => {
         const cardElement = document.createElement('div');
-        const isOwned = userCardIds.has(card.id); // Verificar si el usuario posee la carta
+        const isOwned = userCardIds.has(card.id);
 
-        // Asignar clases para estilo y contenido de la carta
-        cardElement.className = `card ${card.rarity} ${isOwned ? 'card-owned' : 'card-not-owned'}`;
+        // Agregar clases de rareza y de propiedad
+        cardElement.className = `card ${card.rarity.toLowerCase()} ${isOwned ? 'card-owned' : 'card-not-owned'}`;
         cardElement.innerHTML = `
             <img src="${card.image_url}" alt="${card.name}">
             <h3>${card.name}</h3>
             <p>Rareza: ${card.rarity}</p>
-            <p>Colección: ${card.collection_name}</p>
         `;
 
-        collectionDiv.appendChild(cardElement);
+        container.appendChild(cardElement);
     });
 }
+
 async function loadAllCards() {
     // Obtenemos todas las cartas y la colección del usuario
     const allCardsResponse = await fetch('/api/allCards');
@@ -218,12 +227,14 @@ async function loadAllCards() {
 function filterCards(rarity) {
     const allCards = document.querySelectorAll('.card');
     allCards.forEach(card => {
-        if (card.querySelector('p').textContent.includes(rarity) || rarity === 'ALL') {
+        // Verificar si la carta tiene la clase de rareza seleccionada o si se selecciona "ALL" para mostrar todas
+        if (card.classList.contains(rarity.toLowerCase()) || rarity === 'ALL') {
             card.style.display = 'block';
         } else {
             card.style.display = 'none';
         }
     });
 }
+
 // Ejecutar la función de verificación de token al cargar la página
 window.onload = checkForToken;
