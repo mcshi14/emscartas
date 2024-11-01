@@ -12,6 +12,7 @@ module.exports = async(req, res) => {
 
     try {
         // Consulta a la base de datos para obtener el número de packs del usuario
+        console.log(twitchId)
         const result = await pool.query('SELECT packs FROM users WHERE twitch_id = $1', [twitchId]);
 
         if (result.rows.length === 0) {
