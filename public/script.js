@@ -77,9 +77,9 @@ async function openPack(twitchId) {
     let packsCount = parseInt(packsCountElem.textContent);
 
     if (packsCount > 0) {
-        // Llamada a la API para abrir un sobre y actualizar en la base de datos
-        const response = await fetch(`${apiBaseUrl}/user/${twitchId}/open-pack`, {
-            method: 'POST',
+        // Llamada a la API para abrir un sobre usando GET y pasar twitchId como parámetro de consulta
+        const response = await fetch(`${apiBaseUrl}/user/${twitchId}/open-pack?`, {
+            method: 'GET', // Cambiado a GET
             headers: {
                 'Content-Type': 'application/json'
             }
@@ -113,6 +113,7 @@ async function openPack(twitchId) {
         alert("No tienes sobres disponibles para abrir.");
     }
 }
+
 
 async function fetchUserPacks(twitchId) {
     try {
