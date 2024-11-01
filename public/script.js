@@ -73,26 +73,53 @@ async function loadUserData(twitchId) {
     }
 }
 
-// Mostrar todas las cartas, indicando cuáles posee el usuario
-function displayCards(allCards, userCards) {
+function displayCards(allCards, userCardIds) {
     const collectionDiv = document.getElementById('collection');
     collectionDiv.innerHTML = ''; // Limpiar la colección antes de mostrar nuevas cartas
 
+    // Agrupar las cartas por colección
+    const collections = {};
     allCards.forEach(card => {
-        const cardElement = document.createElement('div');
-        const isOwned = userCards.includes(card.id); // Verificar si el usuario posee la carta
-
-        // Asignar la clase y contenido de la carta según si el usuario la posee
-        cardElement.className = `card ${card.rarity} ${isOwned ? 'card-owned' : 'card-not-owned'}`;
-        cardElement.innerHTML = `
-            <img src="${card.image_url}" alt="${card.name}">
-            <h3>${card.name}</h3>
-            <p>Rareza: ${card.rarity}</p>
-            <p>Colección: ${card.collection_name}</p>
-        `;
-
-        collectionDiv.appendChild(cardElement);
+        if (!collections[card.collection_name]) {
+            collections[card.collection_name] = [];
+        }
+        collections[card.collection_name].push(card);
     });
+
+    // Crear una sección para cada colección
+    for (const [collectionName, cards] of Object.entries(collections)) {
+        // Crear un contenedor de colección
+        const collectionSection = document.createElement('div');
+        collectionSection.className = 'collection-section';
+
+        // Título de la colección
+        const collectionTitle = document.createElement('h2');
+        collectionTitle.textContent = collectionName;
+        collectionSection.appendChild(collectionTitle);
+
+        // Contenedor para las cartas de la colección
+        const cardsContainer = document.createElement('div');
+        cardsContainer.className = 'cards-container';
+
+        // Añadir cada carta a la sección
+        cards.forEach(card => {
+            const cardElement = document.createElement('div');
+            const isOwned = userCardIds.has(card.id);
+
+            // Asignar clases para estilo y contenido de la carta
+            cardElement.className = `card ${card.rarity} ${isOwned ? 'card-owned' : 'card-not-owned'}`;
+            cardElement.innerHTML = `
+                <img src="${card.image_url}" alt="${card.name}">
+                <h3>${card.name}</h3>
+                <p>Rareza: ${card.rarity}</p>
+            `;
+
+            cardsContainer.appendChild(cardElement);
+        });
+
+        collectionSection.appendChild(cardsContainer);
+        collectionDiv.appendChild(collectionSection);
+    }
 }
 
 // Función para abrir un sobre y actualizar la base de datos en Vercel
