@@ -15,7 +15,7 @@ module.exports = async(req, res) => {
 
     const { twitchId } = req.body;
     console.log("twitchId extraído:", twitchId); // Log del twitchId extraído
-
+    return res.status(404).json({ error: twitchId });
     try {
         const result = await pool.query('SELECT packs FROM users WHERE twitch_id = $1', [twitchId]);
         console.log("Resultado de la consulta:", result.rows); // Log del resultado de la consulta
