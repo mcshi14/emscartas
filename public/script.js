@@ -280,7 +280,7 @@ function displayCards(allCards, userCardIds) {
         const isOwned = userCardIds.has(card.id); // Asegúrate de que userCardIds sea un Set o Array
 
         // Asignar clases y atributos de colección y rareza
-        cardElement.className = `card ${card.rarity.toLowerCase()} ${isOwned ? 'card-owned' : 'card-not-owned'}`;
+        cardElement.className = `card2 ${card.rarity.toLowerCase()} ${isOwned ? 'card-owned' : 'card-not-owned'}`;
         cardElement.setAttribute('data-collection', card.collection_name); // Etiqueta de colección
         cardElement.innerHTML = `
             <img src="${card.image_url}" alt="${card.name}">

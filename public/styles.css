@@ -111,7 +111,7 @@ h1 {
 
 /* Estilo de cada carta */
 
-.card {
+.card2 {
     background-color: #2a2a2a;
     border-radius: 10px;
     padding: 15px;
@@ -119,19 +119,19 @@ h1 {
     transition: transform 0.2s, opacity 0.2s, filter 0.2s;
 }
 
-.card img {
+.card2 img {
     width: 100%;
     height: auto;
     border-radius: 10px;
 }
 
-.card h3 {
+.card2 h3 {
     margin-top: 10px;
     font-size: 1.2em;
     color: #f8d000;
 }
 
-.card p {
+.card2 p {
     color: #ccc;
 }
 
@@ -150,7 +150,7 @@ h1 {
     /* Desactivar interacción */
 }
 
-.card:hover {
+.card2:hover {
     transform: scale(1.05);
     /* Efecto hover en cartas poseídas */
 }
