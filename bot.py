@@ -36,15 +36,25 @@ def get_user_data(username):
             conn.commit()
             return {"username": username, "packs": 0, "cards": []}
 
-# Función para dar un sobre a un usuario
+# Función para dar un sobre a un usuario, creando su perfil si no existe
 def give_pack_to_user(username):
     with conn.cursor() as cur:
+        # Primero, intenta actualizar el número de sobres del usuario
         cur.execute("UPDATE users SET packs = packs + 1 WHERE username = %s RETURNING packs", (username,))
-        new_pack_count = cur.fetchone()[0]
-        conn.commit()
-    return new_pack_count
+        result = cur.fetchone()
+        
+        # Si el usuario no existe (result es None), crea el perfil del usuario y asigna el primer sobre
+        if result is None:
+            cur.execute("INSERT INTO users (username, packs, cards) VALUES (%s, %s, %s) RETURNING packs",
+                        (username, 1, []))
+            result = cur.fetchone()
 
-# Función para abrir un sobre y añadir una carta
+        # Confirma los cambios en la base de datos
+        conn.commit()
+        
+    return result[0]  # Retorna el número de sobres actualizados
+
+
 def open_pack(username):
     with conn.cursor() as cur:
         # Verificar que el usuario tenga sobres
@@ -59,7 +69,7 @@ def open_pack(username):
 
         # Añadir la carta a la colección del usuario y disminuir el número de sobres
         cur.execute("""
-            UPDATE users SET packs = packs - 1, cards = array_append(cards, %s) 
+            UPDATE users SET packs = packs - 1, cards = array_append(cards, %s::text) 
             WHERE username = %s RETURNING packs
         """, (new_card[0], username))
         remaining_packs = cur.fetchone()[0]
