@@ -1,6 +1,6 @@
 const clientId = 'lvy1fq9h316jv21p2iirxiq7wttuel'; // Reemplaza con tu Client ID de Twitch
 const redirectUri = 'https://emscartas.vercel.app/'; // Cambia a tu URL de GitHub Pages
-const apiBaseUrl = 'https://emscartas.vercel.app/'; // Reemplaza con la URL de tu proyecto en Vercel
+const apiBaseUrl = 'https://emscartas.vercel.app/api'; // Reemplaza con la URL de tu proyecto en Vercel
 
 // Función para iniciar sesión con Twitch
 function loginWithTwitch() {
