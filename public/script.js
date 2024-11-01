@@ -250,7 +250,7 @@ function displayCards(allCards, userCardIds) {
 
     allCards.forEach(card => {
         const cardElement = document.createElement('div');
-        const isOwned = userCardIds.has(card.id);
+        const isOwned = userCardIds.has(card.id); // Asegúrate de que userCardIds sea un Set o Array
 
         // Asignar clases y atributos de colección y rareza
         cardElement.className = `card ${card.rarity.toLowerCase()} ${isOwned ? 'card-owned' : 'card-not-owned'}`;
@@ -264,6 +264,7 @@ function displayCards(allCards, userCardIds) {
         container.appendChild(cardElement);
     });
 }
+
 async function loadAllCards() {
     // Obtenemos todas las cartas y la colección del usuario
     const allCardsResponse = await fetch('/api/allCards');

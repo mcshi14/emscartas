@@ -75,3 +75,63 @@ body {
     font-size: 16px;
     cursor: pointer;
 }
+
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #121212;
+    color: #f1f1f1;
+}
+
+h1 {
+    color: #ffd700;
+}
+
+#user-info {
+    margin-bottom: 20px;
+}
+
+#collection {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    /* Columnas automáticas de mínimo 150px */
+    gap: 20px;
+    /* Espacio entre las cartas */
+    justify-items: center;
+    margin-top: 20px;
+}
+
+.card {
+    width: 150px;
+    padding: 10px;
+    background-color: #1e1e1e;
+    border: 1px solid #333;
+    border-radius: 10px;
+    text-align: center;
+    transition: transform 0.2s;
+}
+
+.card img {
+    width: 100%;
+    height: auto;
+    border-radius: 5px;
+}
+
+.card h3 {
+    margin: 10px 0 5px 0;
+    font-size: 16px;
+    color: #ffd700;
+}
+
+.card p {
+    margin: 5px 0;
+    font-size: 14px;
+    color: #cfcfcf;
+}
+
+
+/* Efecto al pasar el ratón */
+
+.card:hover {
+    transform: scale(1.05);
+}
