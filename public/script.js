@@ -116,12 +116,12 @@ async function openPack(twitchId) {
 
 async function fetchUserPacks(twitchId) {
     try {
-        const response = await fetch(`${apiBaseUrl}/user/packs`, {
-            method: 'POST', // Cambia a POST para enviar el cuerpo
+        // Enviar el twitchId como parámetro de consulta en una solicitud GET
+        const response = await fetch(`${apiBaseUrl}/user/packs?twitchId=${twitchId}`, {
+            method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ twitchId }) // Envía twitchId en el cuerpo
+            }
         });
 
         const data = await response.json();
@@ -137,5 +137,6 @@ async function fetchUserPacks(twitchId) {
         document.getElementById('packs-count').textContent = "0"; // Mostrar 0 si hay un error
     }
 }
+
 // Ejecutar la función de verificación de token al cargar la página
 window.onload = checkForToken;
