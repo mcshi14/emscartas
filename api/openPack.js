@@ -65,28 +65,36 @@ module.exports = async(req, res) => {
 function getRandomCardBasedOnRarity(cards) {
     if (cards.length === 0) return null;
 
-    // Contar las cartas por rareza en `cards`
-    const rarityCounts = cards.reduce((acc, card) => {
-        acc[card.rarity] = (acc[card.rarity] || 0) + 1;
-        return acc;
-    }, {});
-
-    // Establecer pesos base para cada rareza
+    // Configura los pesos de rareza ajustados
     const baseRarityWeights = {
         common: 70,
         rare: 25,
-        legendary: 5
+        epic: 15,
+        legendary: 10
     };
 
-    // Ajustar las probabilidades de cada rareza según las cartas disponibles
+    // Crear un objeto para almacenar las cartas según su rareza
+    const cardsByRarity = {
+        common: [],
+        rare: [],
+        epic: [],
+        legendary: []
+    };
+
+    // Separar las cartas por rareza
+    cards.forEach(card => {
+        if (cardsByRarity[card.rarity]) {
+            cardsByRarity[card.rarity].push(card);
+        }
+    });
+
+    // Calcular el peso total ajustado en función de las cartas disponibles
     const adjustedRarityWeights = {};
     let totalWeight = 0;
 
-    for (const [rarity, baseWeight] of Object.entries(baseRarityWeights)) {
-        const availableCards = rarityCounts[rarity] || 0;
-
-        // Si no hay cartas de esta rareza, la probabilidad es cero
-        if (availableCards > 0) {
+    for (const [rarity, cards] of Object.entries(cardsByRarity)) {
+        const baseWeight = baseRarityWeights[rarity] || 0;
+        if (cards.length > 0) {
             adjustedRarityWeights[rarity] = baseWeight;
             totalWeight += baseWeight;
         } else {
@@ -94,22 +102,24 @@ function getRandomCardBasedOnRarity(cards) {
         }
     }
 
-    // Crear el array de cartas ponderado dinámicamente
-    const weightedCards = [];
+    // Generar un número aleatorio para seleccionar la rareza según el peso total
+    let random = Math.random() * totalWeight;
 
-    cards.forEach(card => {
-        const weight = adjustedRarityWeights[card.rarity];
-        for (let i = 0; i < weight; i++) {
-            weightedCards.push(card);
+    let selectedRarity;
+    for (const [rarity, weight] of Object.entries(adjustedRarityWeights)) {
+        if (random < weight) {
+            selectedRarity = rarity;
+            break;
         }
-    });
-
-    // Si no hay cartas ponderadas (por seguridad), retornar null
-    if (weightedCards.length === 0) {
-        return null;
+        random -= weight;
     }
 
-    // Seleccionar una carta al azar del array ponderado
-    const randomIndex = Math.floor(Math.random() * weightedCards.length);
-    return weightedCards[randomIndex];
+    // Seleccionar una carta aleatoria dentro de la rareza seleccionada
+    const cardsOfSelectedRarity = cardsByRarity[selectedRarity];
+    if (!cardsOfSelectedRarity || cardsOfSelectedRarity.length === 0) {
+        return null; // Retorna null si no hay cartas en la rareza seleccionada
+    }
+
+    const randomCardIndex = Math.floor(Math.random() * cardsOfSelectedRarity.length);
+    return cardsOfSelectedRarity[randomCardIndex];
 }
