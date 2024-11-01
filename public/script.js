@@ -102,13 +102,22 @@ function displayCards(allCards, userCardIds) {
     });
 }
 
-// Función para abrir un sobre y actualizar la base de datos en Vercel
 async function openPack() {
     const packsCountElem = document.getElementById('packs-count');
     let packsCount = parseInt(packsCountElem.textContent);
 
     if (packsCount > 0) {
-        // Llamada a la API para abrir un sobre usando GET y pasar twitchId como parámetro de consulta
+        // Iniciar la animación de apertura del sobre
+        const pack = document.querySelector('.pack');
+        const cardReveal = document.getElementById('cardReveal');
+
+        // Añadir la clase 'open' para activar la animación de apertura del sobre
+        pack.classList.add('open');
+
+        // Esperar a que la animación de apertura finalice
+        await new Promise(resolve => setTimeout(resolve, 600));
+
+        // Llamada a la API para abrir un sobre y reducir el número de sobres
         const response = await fetch(`${apiBaseUrl}/user/${twitchId}/open-pack?twitchId=${twitchId}`, {
             method: 'GET', // Usamos GET para enviar twitchId como parámetro de consulta
             headers: {
@@ -120,10 +129,22 @@ async function openPack() {
             const result = await response.json();
             const newCard = result.card;
 
+            // Actualizar el contador de sobres
             packsCount -= 1;
             packsCountElem.textContent = packsCount;
 
-            // Mostrar la nueva carta en la colección
+            // Mostrar la nueva carta en la animación de revelado
+            cardReveal.style.display = 'flex';
+            cardReveal.innerHTML = `
+                <div class="card ${newCard.rarity} card-owned">
+                    <img src="${newCard.image_url}" alt="${newCard.name}">
+                    <h3>${newCard.name}</h3>
+                    <p>Rareza: ${newCard.rarity}</p>
+                    <p>Colección: ${newCard.collection_name}</p>
+                </div>
+            `;
+
+            // Agregar la nueva carta a la colección en la página
             const collectionDiv = document.getElementById('collection');
             const cardElement = document.createElement('div');
             cardElement.className = `card ${newCard.rarity} card-owned`;
@@ -135,15 +156,21 @@ async function openPack() {
             `;
             collectionDiv.appendChild(cardElement);
 
+            // Mensaje de éxito
             alert(`¡Has obtenido la carta ${newCard.name}!`);
         } else {
             const errorData = await response.json();
             console.error('Error al abrir el sobre:', errorData.error);
         }
+
+        // Reiniciar el estado de la animación
+        pack.classList.remove('open');
+        cardReveal.style.display = 'none';
     } else {
         alert("No tienes sobres disponibles para abrir.");
     }
 }
+
 
 
 async function fetchUserPacks(twitchId) {

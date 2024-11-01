@@ -28,6 +28,32 @@
             <!-- Opciones generadas dinámicamente en script.js -->
         </select>
     </div>
+    <div id="auth-container">
+        <!-- Código existente para autenticación -->
+    </div>
+
+    <!-- Contenedor del sobre para abrir -->
+    <div class="pack-container">
+        <div class="pack" onclick="openPack()">
+            <div class="pack-lid"></div>
+            <div class="pack-body">
+                <p>Abrir Sobre</p>
+            </div>
+        </div>
+        <div class="card-reveal" id="cardReveal">
+            <div class="card">
+                <p>¡Nueva Carta!</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Menú desplegable para colecciones y contenedor de cartas -->
+    <div id="collection-filter">
+        <label for="collection-select">Seleccione una colección:</label>
+        <select id="collection-select" onchange="filterByCollection()">
+            <!-- Opciones generadas dinámicamente en script.js -->
+        </select>
+    </div>
 
     <!-- Contenedor de cartas -->
     <div id="collection-container">
