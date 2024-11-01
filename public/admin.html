@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administración de Cartas y Colecciones</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <h1>Administración de Cartas y Colecciones</h1>
+
+    <!-- Formulario para agregar una nueva colección -->
+    <section>
+        <h2>Agregar Nueva Colección</h2>
+        <form id="collection-form">
+            <label for="collection-name">Nombre de la colección:</label>
+            <input type="text" id="collection-name" required>
+
+            <button type="button" onclick="createCollection()">Crear Colección</button>
+        </form>
+    </section>
+
+    <!-- Formulario para agregar una nueva carta -->
+    <section>
+        <h2>Agregar Nueva Carta</h2>
+        <form id="card-form">
+            <label for="card-name">Nombre de la carta:</label>
+            <input type="text" id="card-name" required>
+
+            <label for="card-rarity">Rareza:</label>
+            <select id="card-rarity" required>
+                <option value="HRO">HRO</option>
+                <option value="MYTHIC">MYTHIC</option>
+                <option value="LEGENDARY">LEGENDARY</option>
+                <option value="EPIC">EPIC</option>
+                <option value="SUPERIOR">SUPERIOR</option>
+            </select>
+
+            <label for="card-image-url">URL de la imagen:</label>
+            <input type="text" id="card-image-url" required>
+
+            <label for="card-collection">Colección:</label>
+            <select id="card-collection" required>
+                <!-- Las opciones de colección se cargarán dinámicamente desde el backend -->
+            </select>
+
+            <button type="button" onclick="createCard()">Crear Carta</button>
+        </form>
+    </section>
+
+    <script src="admin.js"></script>
+</body>
+
+</html>

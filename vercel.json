@@ -14,6 +14,9 @@
         { "src": "/api/user/([^/]+)/open-pack$", "dest": "/api/openPack.js" },
         { "src": "/api/user/packs$", "dest": "/api/packs.js" },
         { "src": "/api/allCards$", "dest": "/api/allCards.js" },
+        { "src": "/api/allCollections", "dest": "/api/allCollections.js" },
+        { "src": "/api/createCollection", "dest": "/api/createCollection.js" },
+        { "src": "/api/createCard", "dest": "/api/createCard.js" },
         { "src": "/(.*)", "dest": "/public/$1" }
     ]
 }
