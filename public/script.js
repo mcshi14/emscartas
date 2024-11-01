@@ -138,6 +138,50 @@ async function fetchUserPacks(twitchId) {
         document.getElementById('packs-count').textContent = "0"; // Mostrar 0 si hay un error
     }
 }
+async function loadUserCollection(twitchId) {
+    try {
+        // Llamada para obtener todas las cartas
+        const allCardsResponse = await fetch(`${apiBaseUrl}/allCards`);
+        const allCardsData = await allCardsResponse.json();
 
+        // Llamada para obtener las cartas que el usuario posee
+        const userCardsResponse = await fetch(`${apiBaseUrl}/user/${twitchId}`);
+        const userCardsData = await userCardsResponse.json();
+
+        if (!allCardsResponse.ok || !userCardsResponse.ok) {
+            console.error('Error al cargar las cartas:', allCardsData.error || userCardsData.error);
+            return;
+        }
+
+        const allCards = allCardsData.cards;
+        const userCardIds = new Set(userCardsData.cards.map(card => card.id)); // Convertir las cartas del usuario en un Set para fácil comparación
+
+        displayCards(allCards, userCardIds); // Mostrar las cartas
+    } catch (error) {
+        console.error('Error al cargar la colección:', error);
+    }
+}
+
+// Mostrar todas las cartas, aplicando un efecto de "apagado" a las que no posee el usuario
+function displayCards(allCards, userCardIds) {
+    const collectionDiv = document.getElementById('collection');
+    collectionDiv.innerHTML = ''; // Limpiar la colección antes de mostrar nuevas cartas
+
+    allCards.forEach(card => {
+        const cardElement = document.createElement('div');
+        const isOwned = userCardIds.has(card.id); // Verificar si el usuario posee la carta
+
+        // Asignar clases para estilo y contenido de la carta
+        cardElement.className = `card ${card.rarity} ${isOwned ? 'card-owned' : 'card-not-owned'}`;
+        cardElement.innerHTML = `
+            <img src="${card.image_url}" alt="${card.name}">
+            <h3>${card.name}</h3>
+            <p>Rareza: ${card.rarity}</p>
+            <p>Colección: ${card.collection_name}</p>
+        `;
+
+        collectionDiv.appendChild(cardElement);
+    });
+}
 // Ejecutar la función de verificación de token al cargar la página
 window.onload = checkForToken;
