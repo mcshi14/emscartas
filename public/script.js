@@ -169,7 +169,7 @@ async function loadUserCollection(twitchId) {
         const allCardsData = await allCardsResponse.json();
 
         // Llamada para obtener las cartas que el usuario posee
-        const userCardsResponse = await fetch(`${apiBaseUrl}/user/${twitchId}`);
+        const userCardsResponse = await fetch(`${apiBaseUrl}/user/${twitchId}?twitchId=${twitchId}`);
         const userCardsData = await userCardsResponse.json();
 
         if (!allCardsResponse.ok || !userCardsResponse.ok) {
