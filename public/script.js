@@ -19,7 +19,7 @@ function checkForToken() {
     }
 }
 
-// Obtener datos del usuario autenticado, incluyendo el ID
+// Llamar a `fetchUserPacks` después de la autenticación del usuario
 async function fetchUserData(token) {
     const response = await fetch('https://api.twitch.tv/helix/users', {
         headers: {
@@ -30,13 +30,12 @@ async function fetchUserData(token) {
     const data = await response.json();
     const user = data.data[0];
 
-    // Guardar el twitch_id y mostrar el nombre de usuario en la interfaz
-    const twitchId = user.id; // ID único de Twitch del usuario
+    // Mostrar nombre de usuario en la interfaz
     document.getElementById('username-display').textContent = user.display_name;
     document.getElementById('user-info').style.display = 'block';
 
-    // Cargar la colección del usuario autenticado desde la API en Vercel
-    loadUserData(twitchId);
+    // Obtener el número de packs del usuario y mostrarlos en la página
+    fetchUserPacks(user.id); // Pasar twitchId a `fetchUserPacks`
 }
 
 // Obtener datos del usuario desde la API en Vercel
@@ -75,59 +74,63 @@ function displayCards(allCards, userCards) {
 
 // Función para abrir un sobre y actualizar la base de datos en Vercel
 async function openPack(twitchId) {
-    // Llamada a la API para obtener el número de sobres restantes
-    const packCountResponse = await fetch(`${apiBaseUrl}/user/${twitchId}/packs`, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    });
+    const packsCountElem = document.getElementById('packs-count');
+    let packsCount = parseInt(packsCountElem.textContent);
 
-    if (packCountResponse.ok) {
-        const packData = await packCountResponse.json();
-        let packsCount = packData.packs; // Número actual de sobres en la base de datos
-
-        if (packsCount > 0) {
-            // Llamada a la API para abrir un sobre y actualizar en la base de datos
-            const response = await fetch(`${apiBaseUrl}/user/${twitchId}/open-pack`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
-
-            if (response.ok) {
-                const result = await response.json();
-                const newCard = result.card;
-
-                packsCount -= 1;
-                document.getElementById('packs-count').textContent = packsCount; // Actualizar el elemento visualmente
-
-                // Mostrar la nueva carta en la colección
-                const collectionDiv = document.getElementById('collection');
-                const cardElement = document.createElement('div');
-                cardElement.className = `card ${newCard.rarity} card-owned`;
-                cardElement.innerHTML = `
-                    <img src="${newCard.image_url}" alt="${newCard.name}">
-                    <h3>${newCard.name}</h3>
-                    <p>Rareza: ${newCard.rarity}</p>
-                    <p>Colección: ${newCard.collection_name}</p>
-                `;
-                collectionDiv.appendChild(cardElement);
-
-                alert(`¡Has obtenido la carta ${newCard.name}!`);
-            } else {
-                const errorData = await response.json();
-                console.error('Error al abrir el sobre:', errorData.error);
+    if (packsCount > 0) {
+        // Llamada a la API para abrir un sobre y actualizar en la base de datos
+        const response = await fetch(`${apiBaseUrl}/user/${twitchId}/open-pack`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
             }
+        });
+
+        if (response.ok) {
+            const result = await response.json();
+            const newCard = result.card;
+
+            packsCount -= 1;
+            packsCountElem.textContent = packsCount;
+
+            // Mostrar la nueva carta en la colección
+            const collectionDiv = document.getElementById('collection');
+            const cardElement = document.createElement('div');
+            cardElement.className = `card ${newCard.rarity} card-owned`;
+            cardElement.innerHTML = `
+                <img src="${newCard.image_url}" alt="${newCard.name}">
+                <h3>${newCard.name}</h3>
+                <p>Rareza: ${newCard.rarity}</p>
+                <p>Colección: ${newCard.collection_name}</p>
+            `;
+            collectionDiv.appendChild(cardElement);
+
+            alert(`¡Has obtenido la carta ${newCard.name}!`);
         } else {
-            alert("No tienes sobres disponibles para abrir.");
+            const errorData = await response.json();
+            console.error('Error al abrir el sobre:', errorData.error);
         }
     } else {
-        const errorData = await packCountResponse.json();
-        console.error('Error al obtener el número de sobres:', errorData.error);
+        alert("No tienes sobres disponibles para abrir.");
     }
 }
 
+// Función para obtener el número de packs del usuario
+async function fetchUserPacks(twitchId) {
+    try {
+        const response = await fetch(`/api/packs?twitchId=${twitchId}`);
+        const data = await response.json();
+
+        if (response.ok) {
+            document.getElementById('packs-count').textContent = data.packs;
+        } else {
+            console.error('Error:', data.error);
+            document.getElementById('packs-count').textContent = "0"; // Mostrar 0 si hay un error
+        }
+    } catch (error) {
+        console.error('Error al obtener el número de packs:', error);
+        document.getElementById('packs-count').textContent = "0"; // Mostrar 0 si hay un error
+    }
+}
 // Ejecutar la función de verificación de token al cargar la página
 window.onload = checkForToken;
