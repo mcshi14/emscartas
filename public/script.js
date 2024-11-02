@@ -145,7 +145,7 @@ async function openPack() {
                 `;
 
                 // Agregar la carta a la colección o incrementar el contador si ya existe
-                const collectionDiv = document.getElementById('collection');
+                const collectionDiv = document.getElementById('collection-container');
                 let existingCardElement = collectionDiv.querySelector(`.card[data-id="${newCard.id}"]`);
 
                 if (existingCardElement) {
