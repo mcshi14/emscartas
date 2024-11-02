@@ -146,7 +146,7 @@ async function openPack() {
 
                 // Agregar la carta a la colección o incrementar el contador si ya existe
                 const collectionDiv = document.getElementById('collection');
-                let existingCardElement = collectionDiv.querySelector(`.card2[data-id="${newCard.id}"]`);
+                let existingCardElement = collectionDiv.querySelector(`.card[data-id="${newCard.id}"]`);
 
                 if (existingCardElement) {
                     // Incrementar el contador de cartas repetidas
