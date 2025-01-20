@@ -1,0 +1,535 @@
+[
+    {
+        "id_pareja": 1,
+        "nombre_equipo": "Zennith Esports",
+        "logo": "25.png",
+        "pilotos": [
+            {
+                "piloto": "Jaume Dalmases Torres",
+                "id": 209451,
+                "score_carrera": 31,
+                "score_acumulado": 66,
+                "incidents_acumulados": 8,
+                "score_log": [
+                    "Incidentes: 6",
+                    "2º: +30",
+                    "Posición inicial 0: +1"
+                ]
+            },
+            {
+                "piloto": "Xavi sierra",
+                "id": 941866,
+                "score_carrera": 6,
+                "score_acumulado": 11,
+                "incidents_acumulados": 21,
+                "score_log": [
+                    "Incidentes: 6",
+                    "21º: +5",
+                    "Mejor vuelta: +1"
+                ]
+            }
+        ],
+        "puntos_equipo_acumulados": 77
+    },
+    {
+        "id_pareja": 2,
+        "nombre_equipo": "FastRepair Motorsport",
+        "logo": "31.png",
+        "pilotos": [
+            {
+                "piloto": "Javier Berenguel",
+                "id": 409726,
+                "score_acumulado": 45,
+                "incidents_acumulados": 16,
+                "score_carrera": 19,
+                "score_log": [
+                    "Incidentes: 8",
+                    "8º: +19"
+                ]
+            },
+            {
+                "piloto": "Abel Sallán",
+                "id": 372757,
+                "score_acumulado": 26,
+                "incidents_acumulados": 14,
+                "score_carrera": 23,
+                "score_log": [
+                    "Incidentes: 4",
+                    "6º: +22",
+                    "Incidentes < 5: +1"
+                ]
+            }
+        ],
+        "puntos_equipo_acumulados": 71
+    },
+    {
+        "id_pareja": 3,
+        "nombre_equipo": "RinconRacing TMCustomLogos",
+        "logo": "35.png",
+        "pilotos": [
+            {
+                "piloto": "Carlos Boza Puya",
+                "id": 355119,
+                "score_acumulado": 37,
+                "incidents_acumulados": 20,
+                "score_carrera": 9,
+                "score_log": [
+                    "Incidentes: 13",
+                    "17º: +9"
+                ]
+            },
+            {
+                "piloto": "Alberto Senao",
+                "id": 142818,
+                "score_acumulado": 31,
+                "incidents_acumulados": 7,
+                "score_carrera": 0,
+                "score_log": []
+            }
+        ],
+        "puntos_equipo_acumulados": 68
+    },
+    {
+        "id_pareja": 8,
+        "nombre_equipo": "XBD RACING GT4",
+        "logo": "24.png",
+        "pilotos": [
+            {
+                "piloto": "Felix Manzanedo",
+                "id": 799932,
+                "score_acumulado": 31,
+                "incidents_acumulados": 20,
+                "score_carrera": 16,
+                "score_log": [
+                    "Incidentes: 11",
+                    "11º: +16"
+                ]
+            },
+            {
+                "piloto": "Caño Lopez",
+                "id": 535122,
+                "score_acumulado": 36,
+                "incidents_acumulados": 12,
+                "score_carrera": 36,
+                "score_log": [
+                    "Incidentes: 1",
+                    "1º: +35",
+                    "Incidentes < 5: +1"
+                ]
+            }
+        ],
+        "puntos_equipo_acumulados": 67
+    },
+    {
+        "id_pareja": 6,
+        "nombre_equipo": "DRM SimSports",
+        "logo": "16.png",
+        "pilotos": [
+            {
+                "piloto": "Maycol Uribe Romero",
+                "id": 144356,
+                "score_acumulado": 48,
+                "incidents_acumulados": 14,
+                "score_carrera": 24,
+                "score_log": [
+                    "Incidentes: 5",
+                    "5º: +24"
+                ]
+            },
+            {
+                "piloto": "Damian Gomez",
+                "id": 166487,
+                "score_acumulado": 16,
+                "incidents_acumulados": 18,
+                "score_carrera": 16,
+                "score_log": [
+                    "Incidentes: 3",
+                    "12º: +15",
+                    "Incidentes < 5: +1"
+                ]
+            }
+        ],
+        "puntos_equipo_acumulados": 64
+    },
+    {
+        "id_pareja": 12,
+        "nombre_equipo": "GO! eSports",
+        "logo": "33.png",
+        "pilotos": [
+            {
+                "piloto": "Kiko Lacalle",
+                "id": 528824,
+                "score_acumulado": 26,
+                "incidents_acumulados": 16,
+                "score_carrera": 7,
+                "score_log": [
+                    "Incidentes: 5",
+                    "19º: +7"
+                ]
+            },
+            {
+                "piloto": "Joan Marti",
+                "id": 243240,
+                "score_acumulado": 32,
+                "incidents_acumulados": 15,
+                "score_carrera": 18,
+                "score_log": [
+                    "Incidentes: 5",
+                    "9º: +18"
+                ]
+            }
+        ],
+        "puntos_equipo_acumulados": 58
+    },
+    {
+        "id_pareja": 4,
+        "nombre_equipo": "Enosis eSports Simultimate",
+        "logo": "7.png",
+        "pilotos": [
+            {
+                "piloto": "Ale G Torres",
+                "id": 273285,
+                "score_acumulado": 34,
+                "incidents_acumulados": 17,
+                "score_carrera": 17,
+                "score_log": [
+                    "Incidentes: 6",
+                    "10º: +17"
+                ]
+            },
+            {
+                "piloto": "Alejandro Castañeyra",
+                "id": 411987,
+                "score_acumulado": 15,
+                "incidents_acumulados": 9,
+                "score_carrera": 13,
+                "score_log": [
+                    "Incidentes: 2",
+                    "15º: +12",
+                    "Incidentes < 5: +1"
+                ]
+            }
+        ],
+        "puntos_equipo_acumulados": 49
+    },
+    {
+        "id_pareja": 11,
+        "nombre_equipo": "SRP Racing Team Formula-R",
+        "logo": "11.png",
+        "pilotos": [
+            {
+                "piloto": "Daniel Ingelmo",
+                "id": 521287,
+                "score_acumulado": 16,
+                "incidents_acumulados": 21,
+                "score_carrera": 8,
+                "score_log": [
+                    "Incidentes: 10",
+                    "18º: +8"
+                ]
+            },
+            {
+                "piloto": "Raúl Zunzarren",
+                "id": 841972,
+                "score_acumulado": 29,
+                "incidents_acumulados": 21,
+                "score_carrera": 20,
+                "score_log": [
+                    "Incidentes: 8",
+                    "7º: +20"
+                ]
+            }
+        ],
+        "puntos_equipo_acumulados": 45
+    },
+    {
+        "id_pareja": 9,
+        "nombre_equipo": "FastRepair Motorsport AlterEgo",
+        "logo": "31.png",
+        "pilotos": [
+            {
+                "piloto": "Marcos García",
+                "id": 414308,
+                "score_acumulado": 16,
+                "incidents_acumulados": 21,
+                "score_carrera": 0,
+                "score_log": [
+                    "Incidentes: 13",
+                    "30º: +0"
+                ]
+            },
+            {
+                "piloto": "Jose Miguel Galilea",
+                "id": 257582,
+                "score_acumulado": 26,
+                "incidents_acumulados": 24,
+                "score_carrera": 4,
+                "score_log": [
+                    "Incidentes: 14",
+                    "22º: +4"
+                ]
+            }
+        ],
+        "puntos_equipo_acumulados": 42
+    },
+    {
+        "id_pareja": 13,
+        "nombre_equipo": " SRP Racing Team",
+        "logo": "11.png",
+        "pilotos": [
+            {
+                "piloto": " Salva Torres",
+                "id": 783240,
+                "score_acumulado": 39,
+                "incidents_acumulados": 13,
+                "score_carrera": 29,
+                "score_log": [
+                    "Incidentes: 4",
+                    "3º: +28",
+                    "Incidentes < 5: +1"
+                ]
+            },
+            {
+                "piloto": "Tiffany Toledano",
+                "id": 419789,
+                "score_acumulado": 3,
+                "incidents_acumulados": 8,
+                "score_carrera": 2,
+                "score_log": [
+                    "Incidentes: 3",
+                    "25º: +1",
+                    "Incidentes < 5: +1"
+                ]
+            }
+        ],
+        "puntos_equipo_acumulados": 42
+    },
+    {
+        "id_pareja": 5,
+        "nombre_equipo": "GG ViewSonic Simtechpro #122",
+        "logo": "19.png",
+        "pilotos": [
+            {
+                "piloto": "Sito Ferrer",
+                "id": 415746,
+                "score_acumulado": 6,
+                "incidents_acumulados": 11,
+                "score_carrera": 6,
+                "score_log": [
+                    "Incidentes: 11",
+                    "20º: +6"
+                ]
+            },
+            {
+                "piloto": "Aleix Garcia",
+                "id": 496743,
+                "score_acumulado": 27,
+                "incidents_acumulados": 23,
+                "score_carrera": 14,
+                "score_log": [
+                    "Incidentes: 11",
+                    "13º: +14"
+                ]
+            }
+        ],
+        "puntos_equipo_acumulados": 33
+    },
+    {
+        "id_pareja": 17,
+        "nombre_equipo": " Enosis Islas",
+        "logo": "7.png",
+        "pilotos": [
+            {
+                "piloto": "Jorge Correia",
+                "id": 138006,
+                "score_acumulado": 19,
+                "incidents_acumulados": 7,
+                "score_carrera": 0,
+                "score_log": [
+                    "Incidentes: 5",
+                    "27º: +0"
+                ]
+            },
+            {
+                "piloto": "Pablo Cabrera",
+                "id": 801380,
+                "score_acumulado": 7,
+                "incidents_acumulados": 25,
+                "score_carrera": 0,
+                "score_log": [
+                    "Incidentes: 11",
+                    "29º: +0"
+                ]
+            }
+        ],
+        "puntos_equipo_acumulados": 26
+    },
+    {
+        "id_pareja": 14,
+        "nombre_equipo": "Asturtel Networks eSports",
+        "logo": "17.png",
+        "pilotos": [
+            {
+                "piloto": "Agus NM",
+                "id": 545105,
+                "score_acumulado": 22,
+                "incidents_acumulados": 2,
+                "score_carrera": 1,
+                "score_log": [
+                    "Incidentes: 0",
+                    "28º: +0",
+                    "Incidentes < 5: +1"
+                ]
+            },
+            {
+                "piloto": "Ivan Rodriguez",
+                "id": 816956,
+                "score_acumulado": 4,
+                "incidents_acumulados": 9,
+                "score_carrera": 3,
+                "score_log": [
+                    "Incidentes: 5",
+                    "23º: +3"
+                ]
+            }
+        ],
+        "puntos_equipo_acumulados": 26
+    },
+    {
+        "id_pareja": 16,
+        "nombre_equipo": "DiveBoom Racing",
+        "logo": "27.png",
+        "pilotos": [
+            {
+                "piloto": "Cristian Pérez",
+                "id": 286034,
+                "score_acumulado": 0,
+                "incidents_acumulados": 10,
+                "score_carrera": 0,
+                "score_log": []
+            },
+            {
+                "piloto": "Darwin Romero",
+                "id": 359150,
+                "score_acumulado": 26,
+                "incidents_acumulados": 8,
+                "score_carrera": 26,
+                "score_log": [
+                    "Incidentes: 8",
+                    "4º: +26"
+                ]
+            }
+        ],
+        "puntos_equipo_acumulados": 26
+    },
+    {
+        "id_pareja": 7,
+        "nombre_equipo": "Asturtel eSports",
+        "logo": "17.png",
+        "pilotos": [
+            {
+                "piloto": "Rubén Garrido Alonso",
+                "id": 922869,
+                "score_acumulado": 19,
+                "incidents_acumulados": 12,
+                "score_carrera": 10,
+                "score_log": [
+                    "Incidentes: 7",
+                    "16º: +10"
+                ]
+            },
+            {
+                "piloto": "Alvaro Ramirez",
+                "id": 929728,
+                "score_acumulado": -6,
+                "incidents_acumulados": 20,
+                "score_carrera": 0,
+                "score_log": [
+                    "Incidentes: 11",
+                    "26º: +0"
+                ]
+            }
+        ],
+        "puntos_equipo_acumulados": 13
+    },
+    {
+        "id_pareja": 18,
+        "nombre_equipo": "Rincon Racing BJSimracing",
+        "logo": "35.png",
+        "pilotos": [
+            {
+                "piloto": "Vicente Aparicio",
+                "id": 682696,
+                "score_acumulado": 4,
+                "incidents_acumulados": 10,
+                "score_carrera": 0,
+                "score_log": []
+            },
+            {
+                "piloto": "Raul Suarez",
+                "id": 229474,
+                "score_acumulado": 2,
+                "incidents_acumulados": 11,
+                "score_carrera": 2,
+                "score_log": [
+                    "Incidentes: 11",
+                    "24º: +2"
+                ]
+            }
+        ],
+        "puntos_equipo_acumulados": 6
+    },
+    {
+        "id_pareja": 10,
+        "nombre_equipo": "GG Viewsonic Simtechpro #992",
+        "logo": "19.png",
+        "pilotos": [
+            {
+                "piloto": "Juanma Frias Gamez",
+                "id": 227966,
+                "score_acumulado": 13,
+                "incidents_acumulados": 16,
+                "score_carrera": 13,
+                "score_log": [
+                    "Incidentes: 11",
+                    "14º: +13"
+                ]
+            },
+            {
+                "piloto": "Fran Parada",
+                "id": 548682,
+                "score_acumulado": -12,
+                "incidents_acumulados": 19,
+                "score_carrera": 0,
+                "score_log": [
+                    "Incidentes: 11"
+                ]
+            }
+        ],
+        "puntos_equipo_acumulados": 1
+    },
+    {
+        "id_pareja": 15,
+        "nombre_equipo": "PGT Racing",
+        "logo": "40.png",
+        "pilotos": [
+            {
+                "piloto": "Nicolas Teliz",
+                "id": 852339,
+                "score_acumulado": 0,
+                "incidents_acumulados": 0,
+                "score_carrera": 0,
+                "score_log": []
+            },
+            {
+                "piloto": "Felipe Peña Gonzalez",
+                "id": 778163,
+                "score_acumulado": 0,
+                "incidents_acumulados": 0,
+                "score_carrera": 0,
+                "score_log": []
+            }
+        ],
+        "puntos_equipo_acumulados": 0
+    }
+]
